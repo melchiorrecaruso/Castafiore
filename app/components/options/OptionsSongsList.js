@@ -23,14 +23,15 @@ const OptionsSongsList = ({ songs, indexOptions, setIndexOptions, onUpdate = () 
 	const settings = useSettings()
 	const refOption = React.useRef()
 	const [isCached, setIsCached] = React.useState(false)
+	const selectedSongId = songs[indexOptions]?.id
 
 	React.useEffect(() => {
 		if (indexOptions < 0) return
-		isSongCached(config, songs[indexOptions]?.id, settings.streamFormat, settings.maxBitrate)
+		isSongCached(config, selectedSongId, settings.streamFormat, settings.maxBitRate)
 			.then((cached) => {
-				setIsCached(cached ? true : false)
+				setIsCached(settings.isSongCaching && Boolean(cached))
 			})
-	}, [indexOptions])
+	}, [config, indexOptions, selectedSongId, settings.isSongCaching, settings.maxBitRate, settings.streamFormat])
 
 	const playSimilarSongs = () => {
 		getApiNetworkFirst(config, 'getSimilarSongs', { id: songs[indexOptions].id, count: 50 })
@@ -162,7 +163,7 @@ const OptionsSongsList = ({ songs, indexOptions, setIndexOptions, onUpdate = () 
 		let indexPlay = 0
 
 		for (let index = 0; index < songs.length; index++) {
-			const cached = await isSongCached(config, songs[index].id, settings.streamFormat, settings.maxBitrate)
+			const cached = await isSongCached(config, songs[index].id, settings.streamFormat, settings.maxBitRate)
 			if (index === indexOptions) indexPlay = cachedList.length
 			if (cached) cachedList.push(songs[index])
 		}

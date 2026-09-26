@@ -17,6 +17,8 @@ const GenreItem = ({ genre, color }) => {
 		if (json?.albumList2?.album?.length) setData(json?.albumList2?.album[0])
 		else setData(null)
 	})
+	const artistCoverArt = album?.artistCoverArt || album?.artistCover ||
+		album?.artists?.find(artist => artist.coverArt)?.coverArt
 
 	return (
 		<Pressable
@@ -27,10 +29,12 @@ const GenreItem = ({ genre, color }) => {
 				album && (
 					<>
 						<ImageError source={{ uri: urlCover(config, album, 100) }} style={styles.albumCover} />
-						<ImageError
-							source={{ uri: urlCover(config, album.artistId, 100) }}
-							style={[styles.artistCover, { borderColor: color, backgroundColor: color }]}
-						/>
+						{artistCoverArt ? (
+							<ImageError
+								source={{ uri: urlCover(config, artistCoverArt, 100) }}
+								style={[styles.artistCover, { borderColor: color, backgroundColor: color }]}
+							/>
+						) : null}
 					</>
 				)
 			}

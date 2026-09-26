@@ -36,15 +36,15 @@ const InformationsSettings = () => {
 
 	const [user] = useCachedAndApi([], 'getUser', { username: config.username }, (json, setData) => {
 		setServer({
-			version: json.serverVersion,
-			name: json.type,
-			apiVersion: json.version,
-			connected: json.status === 'ok',
+			version: json?.serverVersion,
+			name: json?.type,
+			apiVersion: json?.version,
+			connected: json?.status === 'ok',
 		})
-		setData(json.user)
+		setData(json?.user || [])
 	})
 	const [scan] = useCachedAndApi([], 'getScanStatus', {}, (json, setData) => {
-		setData(json.scanStatus)
+		setData(json?.scanStatus || [])
 	})
 
 	const convertDate = (date) => {

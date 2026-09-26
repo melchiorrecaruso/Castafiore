@@ -22,7 +22,7 @@ const HorizontalArtists = ({ artists, onPress = () => { } }) => {
 			style={({ pressed }) => ([mainStyles.opacity({ pressed }), styles.artist])}
 			onPress={() => {
 				onPress(item)
-				navigation.push('Artist', { id: item.id, name: item.name })
+				navigation.push('Artist', item)
 			}}
 			delayLongPress={200}
 			onLongPress={() => setIndexOptions(index)}
@@ -33,7 +33,7 @@ const HorizontalArtists = ({ artists, onPress = () => { } }) => {
 		>
 			<ImageError
 				style={[styles.artistCover, { backgroundColor: theme.secondaryBack }]}
-				source={{ uri: urlCover(config, item) }}
+				source={{ uri: urlCover(config, item, 256) }}
 				iconError='user'
 			/>
 			<Text numberOfLines={1} style={{ color: theme.primaryText, fontSize: size.text.medium, marginBottom: 2, width: 100, textAlign: 'center' }}>{item.name}</Text>

@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { useConfig } from '~/contexts/config'
-import { isSongCached } from '~/utils/cache'
+import { isSongCached, subscribeSongCacheChanged } from '~/utils/cache'
 import { playSong } from '~/utils/player'
 import { useSettings } from '~/contexts/settings'
 import { useSongDispatch } from '~/contexts/song'
@@ -21,18 +21,24 @@ const Cached = ({ song }) => {
 	const config = useConfig()
 
 	React.useEffect(() => {
-		cached(song)
-			.then((res) => {
-				setIsCached(res)
-			})
-	}, [song.id, settings.showCache])
+		let isMounted = true
+		const updateCached = async () => {
+			const cached = settings.showCache
+				? await isSongCached(config, song.id, settings.streamFormat, settings.maxBitRate)
+				: false
+			if (isMounted) setIsCached(Boolean(cached))
+		}
 
-	const cached = async (song) => {
-		if (!settings.showCache) return false
-		const cache = await isSongCached(config, song.id, settings.streamFormat, settings.maxBitrate)
-		if (cache) return true
-		return false
-	}
+		updateCached()
+		const subscription = subscribeSongCacheChanged(({ songId }) => {
+			if (songId !== null && songId !== song.id) return
+			updateCached()
+		})
+		return () => {
+			isMounted = false
+			subscription.remove()
+		}
+	}, [config, song.id, settings.isSongCaching, settings.showCache, settings.streamFormat, settings.maxBitRate])
 
 	if (isCached) return (
 		<Icon
