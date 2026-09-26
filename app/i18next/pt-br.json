@@ -43,8 +43,6 @@
         "Scroll": "Rolagem",
         "Scroll Description": "Recomenda-se ativar o auxílio à rolagem na versão desktop",
         "Show scroll helper": "Exibir rolagem",
-        "ListenBrainz Stats": "Informações do ListenBrainz",
-        "ListenBrainz User": "Usuário do ListenBrainz",
         "user": "usuário"
       },
       "playlists": {
@@ -130,7 +128,6 @@
     "Explore": "Explorar",
     "Favorited songs": "Músicas favoritas",
     "Favorited": "Favoritas",
-    "Fresh releases": "Lançamentos",
     "Go to album": "Ir para álbum",
     "Go to artist": "Ir para artista",
     "Go to genre": "Ir para estilo",

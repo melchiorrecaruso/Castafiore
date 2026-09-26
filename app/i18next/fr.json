@@ -43,8 +43,6 @@
         "Scroll": "Scroll",
         "Scroll Description": "Il est recommandé d'activer l'aide au défilement sur ordinateur",
         "Show scroll helper": "Afficher l'aide au défilement",
-        "ListenBrainz Stats": "Statistiques ListenBrainz",
-        "ListenBrainz User": "Utilisateur ListenBrainz",
         "user": "utilisateur"
       },
       "playlists": {
@@ -134,7 +132,6 @@
     "Explore": "Explorer",
     "Favorited songs": "Titres favoris",
     "Favorited": "Favori",
-    "Fresh releases": "Sorties récentes",
     "Go to album": "Aller à l'album",
     "Go to artist": "Aller à l'artiste",
     "Go to genre": "Aller au genre",

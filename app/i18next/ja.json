@@ -44,8 +44,6 @@
         "Scroll": "スクロール",
         "Scroll Description": "デスクトップではスクロールヘルパーの有効化をお勧めします",
         "Show scroll helper": "スクロールヘルパーを表示",
-        "ListenBrainz Stats": "ListenBrainz 統計",
-        "ListenBrainz User": "ListenBrainz ユーザー",
         "user": "ユーザー"
       },
       "playlists": {
@@ -135,7 +133,6 @@
     "Explore": "探索",
     "Favorited songs": "お気に入りの曲",
     "Favorited": "お気に入り",
-    "Fresh releases": "新着リリース",
     "Go to album": "アルバムへ移動",
     "Go to artist": "アーティストへ移動",
     "Go to genre": "ジャンルへ移動",

@@ -44,8 +44,6 @@
         "Scroll": "Desplazamiento",
         "Scroll Description": "Se recomienda activar la ayuda de desplazamiento en escritorio",
         "Show scroll helper": "Mostrar ayuda de desplazamiento",
-        "ListenBrainz Stats": "Estadísticas ListenBrainz",
-        "ListenBrainz User": "Usuario ListenBrainz",
         "user": "usuario"
       },
       "playlists": {
@@ -135,7 +133,6 @@
     "Explore": "Explorar",
     "Favorited songs": "Canciones favoritas",
     "Favorited": "Favoritos",
-    "Fresh releases": "Novedades",
     "Go to album": "Ir al álbum",
     "Go to artist": "Ir al artista",
     "Go to genre": "Ir al género",

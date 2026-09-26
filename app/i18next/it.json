@@ -33,7 +33,7 @@
         "Legacy Description": "L'autenticazione legacy invia la password in chiaro, senza hashing.",
         "Connect": "Connetti",
         "Alert Delete Title": "Elimina server",
-        "Alert Delete Message": "Sei sicuro di voler eliminare questo server?",
+        "Alert Delete Message": "Rimuovere questo server dalla lista? Database, brani e copertine in cache non verranno cancellati e saranno riutilizzati aggiungendo nuovamente lo stesso server e nome utente.",
         "Delete": "Elimina"
       },
       "home": {
@@ -43,8 +43,9 @@
         "Scroll": "Scorrimento",
         "Scroll Description": "Si consiglia di attivare l'assistente allo scorrimento su desktop",
         "Show scroll helper": "Mostra assistente allo scorrimento",
-        "ListenBrainz Stats": "Statistiche ListenBrainz",
-        "ListenBrainz User": "Utente ListenBrainz",
+        "Last.fm Stats": "Statistiche Last.fm",
+        "Last.fm User": "Utente Last.fm",
+        "Enable Last.fm Stats": "Abilita statistiche Last.fm",
         "user": "utente"
       },
       "playlists": {
@@ -72,12 +73,14 @@
       },
       "cache": {
         "Song caching": "Caching brani",
-        "Enable song caching": "Abilita caching brani",
+		"Enable song caching": "Abilita caching brani",
+		"Enable cover caching": "Abilita caching cover",
         "Show cached songs": "Mostra i brani in cache",
         "Cache next song": "Precarica il brano successivo",
         "Cache next song description": "Scarica automaticamente i prossimi brani (predefinito: 5)",
         "Clear API cache": "Svuota cache API",
-        "Clear song cache": "Svuota cache brani",
+		"Clear song cache": "Svuota cache brani",
+		"Clear cover cache": "Svuota cache cover",
         "Clear cache alert message": "Sei sicuro di voler svuotare la cache?",
         "Cache stats": "Statistiche cache",
         "No cache": "Nessuna cache"
@@ -130,7 +133,6 @@
     "Explore": "Esplora",
     "Favorited songs": "Brani preferiti",
     "Favorited": "Preferiti",
-    "Fresh releases": "Nuove uscite",
     "Go to album": "Vai all'album",
     "Go to artist": "Vai all'artista",
     "Go to genre": "Vai al genere",

@@ -34,7 +34,7 @@
         "Legacy Description": "Legacy authentication sends the password in plain text without any hashing.",
         "Connect": "Connect",
         "Alert Delete Title": "Delete Server",
-        "Alert Delete Message": "Are you sure you want to delete this server?",
+        "Alert Delete Message": "Remove this server from the list? Its database, cached songs and cached covers will be kept and reused when the same server and username are added again.",
         "Delete": "Delete"
       },
       "home": {
@@ -44,8 +44,9 @@
         "Scroll": "Scroll",
         "Scroll Description": "It's recommended to activate scroll helper on desktop",
         "Show scroll helper": "Show scroll helper",
-        "ListenBrainz Stats": "ListenBrainz Stats",
-        "ListenBrainz User": "ListenBrainz User",
+        "Last.fm Stats": "Last.fm Stats",
+        "Last.fm User": "Last.fm User",
+        "Enable Last.fm Stats": "Enable Last.fm statistics",
         "user": "user"
       },
       "playlists": {
@@ -75,12 +76,14 @@
       },
       "cache": {
         "Song caching": "Song caching",
-        "Enable song caching": "Enable song caching",
+		"Enable song caching": "Enable song caching",
+		"Enable cover caching": "Enable cover caching",
         "Show cached songs": "Show cached songs",
         "Cache next song": "Cache next song",
         "Cache next song description": "Auto download upcoming songs (default: 5)",
         "Clear API cache": "Clear API cache",
-        "Clear song cache": "Clear song cache",
+		"Clear song cache": "Clear song cache",
+		"Clear cover cache": "Clear cover cache",
         "Clear cache alert message": "Are you sure you want to clear the cache?",
         "Cache stats": "Cache stats",
         "No cache": "No cache"
@@ -135,7 +138,6 @@
     "Explore": "Explore",
     "Favorited songs": "Favorited songs",
     "Favorited": "Favorited",
-    "Fresh releases": "Fresh releases",
     "Go to album": "Go to album",
     "Go to artist": "Go to artist",
     "Go to genre": "Go to genre",

@@ -43,8 +43,6 @@
         "Scroll": "滚动",
         "Scroll Description": "建议在桌面版上激活滚动助手",
         "Show scroll helper": "显示滚动助手",
-        "ListenBrainz Stats": "ListenBrainz 统计数据",
-        "ListenBrainz User": "ListenBrainz 用户",
         "user": "用户名"
       },
       "playlists": {
@@ -130,7 +128,6 @@
     "Explore": "浏览",
     "Favorited songs": "收藏的歌曲",
     "Favorited": "收藏",
-    "Fresh releases": "最新发行",
     "Go to album": "前往该专辑页面",
     "Go to artist": "前往该艺术家页面",
     "Go to genre": "前往该流派页面",

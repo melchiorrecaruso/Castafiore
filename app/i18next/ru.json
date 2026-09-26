@@ -43,8 +43,6 @@
         "Scroll": "Прокрутка",
         "Scroll Description": "Рекомендуется активировать прокрутку на десктопе",
         "Show scroll helper": "Показать прокрутку",
-        "ListenBrainz Stats": "ListenBrainz Статистика",
-        "ListenBrainz User": "ListenBrainz Пользователь",
         "user": "пользователь"
       },
       "playlists": {
@@ -130,7 +128,6 @@
     "Explore": "Полный список",
     "Favorited songs": "Любимые треки",
     "Favorited": "Любимые",
-    "Fresh releases": "Свежие релизы",
     "Go to album": "Перейти к альбому",
     "Go to artist": "Перейти к исполнителю",
     "Go to genre": "Перейти к жанру",

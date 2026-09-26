@@ -43,8 +43,6 @@
         "Scroll": "Scroll",
         "Scroll Description": "Es wird empfolen den Scroll-Helfer auf dem Desktop zu aktivieren",
         "Show scroll helper": "Scroll-Helfer anzeigen",
-        "ListenBrainz Stats": "ListenBrainz Statistiken",
-        "ListenBrainz User": "ListenBrainz Benutzername",
         "user": "Benutzername"
       },
       "playlists": {
@@ -130,7 +128,6 @@
     "Explore": "Erkunden",
     "Favorited songs": "Favorisierte Songs",
     "Favorited": "Favorisiert",
-    "Fresh releases": "Neue Veröffentlichungen",
     "Go to album": "Zum Album",
     "Go to artist": "Zum Künstler",
     "Go to genre": "Zum Genre",

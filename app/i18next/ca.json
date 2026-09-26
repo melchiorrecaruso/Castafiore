@@ -43,8 +43,6 @@
         "Scroll": "Desplaçament",
         "Scroll Description": "Es recomana activar l’ajuda de desplaçament a l’escriptori",
         "Show scroll helper": "Mostra l’ajuda de desplaçament",
-        "ListenBrainz Stats": "Estadístiques ListenBrainz",
-        "ListenBrainz User": "Usuari ListenBrainz",
         "user": "usuari"
       },
       "playlists": {
@@ -130,7 +128,6 @@
     "Explore": "Explora",
     "Favorited songs": "Cançons preferides",
     "Favorited": "Preferits",
-    "Fresh releases": "Llançaments recents",
     "Go to album": "Ves a l’àlbum",
     "Go to artist": "Ves a l’artista",
     "Go to genre": "Ves al gènere",

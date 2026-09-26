@@ -44,8 +44,6 @@
         "Scroll": "스크롤",
         "Scroll Description": "데스크톱에서 활성화하는 것을 추천합니다",
         "Show scroll helper": "스크롤 헬퍼 보여주기",
-        "ListenBrainz Stats": "ListenBrainz 통계",
-        "ListenBrainz User": "ListenBrainz 사용자",
         "user": "사용자"
       },
       "playlists": {
@@ -135,7 +133,6 @@
     "Explore": "탐색",
     "Favorited songs": "즐겨찾기된 노래",
     "Favorited": "즐겨찾기",
-    "Fresh releases": "최근 출시",
     "Go to album": "앨범으로 이동",
     "Go to artist": "아티스트로 이동",
     "Go to genre": "장르로 이동",
