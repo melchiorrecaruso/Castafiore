@@ -18,7 +18,7 @@ const AllItem = ({ item, type, onPress }) => {
 			onPress={() => onPress(item)}>
 			<ImageError
 				style={styles.cover(type)}
-				source={{ uri: urlCover(config, item) }}
+				source={{ uri: urlCover(config, item, 256) }}
 				iconError={['artist', 'artist_all'].includes(type) ? 'user' : 'music'}
 			/>
 			<Text numberOfLines={1} style={styles.title(theme, type)}>{item.name || item.album || item.title}</Text>

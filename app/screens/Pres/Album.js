@@ -46,7 +46,7 @@ const Album = ({ navigation, route: { params } }) => {
 			<PresHeader
 				title={album?.name || album?.album || album?.title || params.name || params.album || params.title}
 				subTitle={album?.artist || params.artist || '-'}
-				imgSrc={urlCover(config, params)}
+				imgSrc={urlCover(config, params, 1000)}
 				onPressOption={() => setIsOptAlbum(true)}
 				onPressTitle={() => {
 					if (album?.artists?.length > 1) setIsOptArtists(true)

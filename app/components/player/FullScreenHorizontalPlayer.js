@@ -94,7 +94,7 @@ const FullScreenHorizontalPlayer = ({ setFullScreen }) => {
 			onRequestClose={() => setFullScreen(false)}
 		>
 			<Image
-				source={{ uri: urlCover(config, song?.songInfo) }}
+				source={{ uri: urlCover(config, song?.songInfo, 1000) }}
 				style={styles.backgroundImage}
 				blurRadius={5}
 			/>
@@ -141,7 +141,7 @@ const FullScreenHorizontalPlayer = ({ setFullScreen }) => {
 							flexDirection: 'row',
 						}}
 					>
-						<ImageError style={styles.imageCover} source={{ uri: urlCover(config, song?.songInfo) }} />
+						<ImageError style={styles.imageCover} source={{ uri: urlCover(config, song?.songInfo, 500) }} />
 						<View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
 							<FavoritedButton
 								id={song?.songInfo?.id}

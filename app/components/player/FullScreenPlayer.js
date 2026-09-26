@@ -59,7 +59,7 @@ const CoverItem = ({ isPreview, song, setFullScreen, stars }) => {
 	if (isPreview === preview.COVER) return (
 		<SlideControl style={albumImage}>
 			<ImageError
-				source={{ uri: urlCover(config, song?.songInfo) }}
+				source={{ uri: urlCover(config, song?.songInfo, 1000) }}
 				style={[albumImage, { backgroundColor: theme.secondaryBack }]}
 			/>
 		</SlideControl>

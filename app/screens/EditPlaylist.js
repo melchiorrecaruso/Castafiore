@@ -68,7 +68,7 @@ const EditPlaylist = ({ route: { params } }) => {
 			<BackButton />
 			<ImageError
 				style={[presStyles.cover, { backgroundColor: theme.secondaryBack }]}
-				source={{ uri: urlCover(config, params.playlist) }}
+				source={{ uri: urlCover(config, params.playlist, 1000) }}
 			/>
 			<View style={[settingStyles.contentMainContainer, { marginTop: 30 }]}>
 				{

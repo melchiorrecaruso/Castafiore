@@ -59,7 +59,7 @@ const Playlist = ({ route: { params } }) => {
 						<PresHeader
 							title={info?.name || params.playlist.name}
 							subTitle={`${((info?.duration || params?.playlist?.duration) / 60) | 1} ${t('minutes')} · ${info?.songCount || params?.playlist?.songCount} ${t('songs')}`}
-							imgSrc={urlCover(config, params.playlist)}
+							imgSrc={urlCover(config, params.playlist, 1000)}
 							onPressOption={() => {
 								setIsOption(true)
 							}}

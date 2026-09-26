@@ -53,7 +53,7 @@ const Info = ({ route: { params: { info } } }) => {
 					alignSelf: 'center',
 					borderRadius: 5,
 				}}
-				source={{ uri: urlCover(config, info) }}
+				source={{ uri: urlCover(config, info, 256) }}
 			/>
 			<Text style={[mainStyles.largeText(theme.primaryText), {
 				textAlign: 'center',

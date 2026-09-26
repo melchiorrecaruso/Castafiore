@@ -46,7 +46,7 @@ const HorizontalQueue = ({ current, queue }) => {
 			{
 				settings.isDesktop ?
 					<ImageError
-						source={{ uri: urlCover(config, currentTrack) }}
+						source={{ uri: urlCover(config, currentTrack, 256) }}
 						blurRadius={10}
 						style={{
 							position: 'absolute',
@@ -60,7 +60,7 @@ const HorizontalQueue = ({ current, queue }) => {
 					/> : null
 			}
 			<ImageError
-				source={{ uri: urlCover(config, currentTrack) }}
+				source={{ uri: urlCover(config, currentTrack, settings.isDesktop ? 256 : 100) }}
 				style={{
 					height: settings.isDesktop ? size.image.large : size.image.medium,
 					width: settings.isDesktop ? size.image.large : size.image.medium,

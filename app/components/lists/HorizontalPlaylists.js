@@ -38,7 +38,7 @@ const ItemPlaylist = ({ item }) => {
 				onPress={() => navigation.navigate('Playlist', { playlist: item })}
 			>
 				<ImageError
-					source={{ uri: urlCover(config, item) }}
+					source={{ uri: urlCover(config, item, 100) }}
 					style={{ width: size.image.small, height: size.image.small, marginEnd: 10, borderRadius: 4 }}
 				/>
 				<View style={{ flexDirection: 'column', justifyContent: 'space-between', flex: 1 }}>
@@ -64,7 +64,7 @@ const ItemPlaylist = ({ item }) => {
 							onPress={() => Player.playSong(config, songDispatch, songList, index)}
 						>
 							<ImageError
-								source={{ uri: urlCover(config, item) }}
+								source={{ uri: urlCover(config, item, 100) }}
 								style={{ width: size.image.tiny, height: size.image.tiny, marginEnd: 10, borderRadius: 4 }}
 							/>
 							<View style={{ flexDirection: 'column', flex: 1, marginEnd: 10 }}>
