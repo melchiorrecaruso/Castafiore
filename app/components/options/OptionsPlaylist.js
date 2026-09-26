@@ -31,7 +31,7 @@ const OptionsPlaylist = ({ playlist, open, onClose, onRefresh }) => {
 					onPress: async () => {
 						refOption.current.close()
 						for (const song of playlist.entry) {
-							await downloadSong(urlStream(config, song.id, settings.streamFormat, settings.maxBitRate), song.id)
+							await downloadSong(urlStream(config, song.id, settings.streamFormat, settings.maxBitRate), song, 'manual')
 						}
 					}
 				},

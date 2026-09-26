@@ -29,7 +29,7 @@ const OptionsFavorited = ({ favorited, isOpen, onClose }) => {
 					onPress: async () => {
 						refOption.current.close()
 						for (const song of favorited) {
-							await downloadSong(urlStream(config, song.id, settings.streamFormat, settings.maxBitRate), song.id)
+							await downloadSong(urlStream(config, song.id, settings.streamFormat, settings.maxBitRate), song, 'manual')
 						}
 					}
 				},

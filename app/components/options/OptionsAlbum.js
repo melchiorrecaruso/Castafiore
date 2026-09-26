@@ -62,7 +62,7 @@ const OptionsAlbum = ({ album, isOpen, onClose }) => {
 					onPress: async () => {
 						refOption.current.close()
 						for (const song of album.song) {
-							await downloadSong(urlStream(config, song.id, settings.streamFormat, settings.maxBitRate), song.id)
+							await downloadSong(urlStream(config, song.id, settings.streamFormat, settings.maxBitRate), song, 'manual', album)
 						}
 					}
 				},
