@@ -9,7 +9,7 @@ import FavoritedButton from '~/components/button/FavoritedButton'
 import size from '~/styles/size'
 import mainStyles from '~/styles/main'
 
-const ExplorerItem = ({ item, title, subTitle, onPress, onLongPress, borderRadius = 0, iconError = null, isFavorited = null }) => {
+const ExplorerItem = ({ item, title, subTitle, onPress, onLongPress, borderRadius = 0, iconError = null, isFavorited = null, coverSize = 100 }) => {
 	const theme = useTheme()
 	const config = useConfig()
 
@@ -29,7 +29,7 @@ const ExplorerItem = ({ item, title, subTitle, onPress, onLongPress, borderRadiu
 				gap: 10,
 			}}>
 			<ImageError
-				source={{ uri: urlCover(config, item, 100) }}
+				source={{ uri: urlCover(config, item, coverSize) }}
 				iconError={iconError}
 				style={{
 					width: 70,
