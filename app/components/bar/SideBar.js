@@ -106,7 +106,7 @@ const SideBar = ({ state, descriptors, navigation }) => {
 	const { t } = useTranslation()
 
 	const [playlists] = useCachedAndApi([], 'getPlaylists', null, (json, setData) => {
-		setData(json.playlists.playlist?.filter(playlist => playlist.comment?.includes(`#${config.username}-pin`)) || [])
+		setData(json?.playlists?.playlist?.filter(playlist => playlist.comment?.includes(`#${config.username}-pin`)) || [])
 	}, [refresh])
 
 	return (

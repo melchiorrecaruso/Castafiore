@@ -23,7 +23,7 @@ const SharesSettings = () => {
 	const [indexOptions, setIndexOptions] = React.useState(-1)
 
 	const [shares, refresh] = useCachedAndApi([], 'getShares', null, (json, setData) => {
-		setData(json.shares?.share || [])
+		setData(json?.shares?.share || [])
 	})
 
 	return (
