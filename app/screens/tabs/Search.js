@@ -17,6 +17,8 @@ import SongsList from '~/components/lists/SongsList'
 import HistoryItem from '~/components/item/HistoryItem'
 import size from '~/styles/size'
 import SectionTitle from '~/components/SectionTitle'
+import { searchPlayableCachedMedia } from '~/utils/cache'
+import { useRefreshOnOffline } from '~/contexts/network'
 
 const STATES = {
 	INIT: 'init',
@@ -210,19 +212,27 @@ const Search = () => {
 		await AsyncStorage.setItem('search.history', JSON.stringify(hist))
 	}
 
-	const getSearch = () => {
+	const getSearch = async () => {
 		setState(STATES.LOADING)
 		getApiNetworkFirst(config, 'search3', { query })
 			.then((json) => {
 				setState(STATES.LOADED)
 				setResults(json?.searchResult3 || undefined)
 			})
-			.catch((err) => {
-				if (err.isApiError) setState(STATES.API_ERROR)
+			.catch(async (err) => {
+				const cached = await searchPlayableCachedMedia(query)
+				setResults(cached)
+				if (cached.album.length || cached.artist.length || cached.song.length) setState(STATES.LOADED)
+				else if (err.isApiError) setState(STATES.API_ERROR)
 				else setState(STATES.NETWORK_ERROR)
-				setResults(undefined)
 			})
 	}
+
+	useRefreshOnOffline(async () => {
+		const cached = await searchPlayableCachedMedia(query)
+		setResults(cached)
+		setState(cached.album.length || cached.artist.length || cached.song.length ? STATES.LOADED : STATES.NETWORK_ERROR)
+	})
 
 	return (
 		<View style={[

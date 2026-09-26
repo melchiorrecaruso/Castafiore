@@ -14,6 +14,8 @@ import Selector from '~/components/Selector'
 import size from '~/styles/size'
 import ExplorerItem from '~/components/item/ExplorerItem'
 import logger from '~/utils/logger'
+import { getPlayableCachedAlbums } from '~/utils/cache'
+import { useRefreshOnOffline } from '~/contexts/network'
 
 const TYPES = ['newest', 'highest', 'frequent', 'recent', 'starred', 'random', 'alphabeticalByName', 'alphabeticalByArtist']
 const PAGE_SIZE = 100
@@ -31,18 +33,28 @@ const AlbumExplorer = () => {
 
 	React.useEffect(() => {
 		setIsLoading(true)
-		getApiNetworkFirst(config, 'getAlbumList2', { type, size: PAGE_SIZE, offset })
-			.then(json => {
+		let responseMode = 'api'
+		getApiNetworkFirst(config, 'getAlbumList2', { type, size: PAGE_SIZE, offset }, mode => { responseMode = mode })
+			.then(async json => {
 				setIsLoading(false)
-				const newAlbums = json?.albumList2?.album || []
+				const newAlbums = responseMode === 'offline'
+					? (offset === 0 ? await getPlayableCachedAlbums() : [])
+					: json?.albumList2?.album || []
 				if (newAlbums.length === 0) return
-				setAlbums(prev => [...prev, ...newAlbums])
+				setAlbums(prev => offset === 0 ? newAlbums : [...prev, ...newAlbums])
 			})
-			.catch(error => {
+			.catch(async error => {
 				logger.error('AlbumExplorer', 'Error fetching albums:', error)
 				setIsLoading(false)
+				if (offset === 0) setAlbums(await getPlayableCachedAlbums())
 			})
 	}, [type, offset])
+
+	useRefreshOnOffline(async () => {
+		setAlbums(await getPlayableCachedAlbums())
+		setOffset(0)
+		setIsLoading(false)
+	})
 
 	// Reset albums when type changes
 	React.useEffect(() => {

@@ -11,21 +11,24 @@ export const SongProvider = ({ children }) => {
 	const [song, dispatch] = React.useReducer(songReducer, defaultSong)
 
 	React.useEffect(() => {
-		if (!song.isInit) {
-			if (Platform.OS === 'android') {
-				const subscription = AppState.addEventListener('change', (appState) => {
-					if (appState === 'active') {
-						Player.initPlayer(dispatch)
-						subscription.remove()
-					}
-				})
-				return () => {
-					subscription.remove()
-				}
-			} else {
-				Player.initPlayer(dispatch)
-			}
+		let started = false
+		let subscription = null
+		const init = () => {
+			if (started) return
+			started = true
+			subscription?.remove()
+			Player.initPlayer(dispatch)
+				.catch(error => logger.error('SongProvider', 'Unable to initialize player:', error))
 		}
+
+		if (Platform.OS !== 'android' || AppState.currentState === 'active') init()
+		else {
+			subscription = AppState.addEventListener('change', appState => {
+				if (appState === 'active') init()
+			})
+		}
+
+		return () => subscription?.remove()
 	}, [])
 
 	return (
@@ -48,7 +51,7 @@ const convertTrack = (track) => {
 		album: track.album,
 		albumId: track.albumId,
 		duration: track.duration,
-		covertArt: track.covertArt,
+		coverArt: track.coverArt || track.coverArtId || track.covertArt,
 		track: track.track,
 		starred: track.starred,
 		userRating: track.userRating ?? track.rating ?? 0,

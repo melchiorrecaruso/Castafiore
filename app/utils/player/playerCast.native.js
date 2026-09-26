@@ -86,7 +86,7 @@ const stopSong = async () => {
 	await client.stop()
 }
 
-const downloadSong = async (_urlStream, _id) => {
+const downloadSong = async (_urlStream, _song, _cacheKind, _album) => {
 }
 
 const downloadNextSong = async (_queue, _currentIndex) => {
@@ -106,11 +106,11 @@ const loadSong = async (config, queue, index) => {
 				artist: track.artist,
 				albumName: track.album,
 				images: [
-					{ url: urlCover(config, track), width: 1024, height: 1024 },
+					{ url: urlCover(config, track, 'original'), width: 1024, height: 1024 },
 					{
-						url: urlCover(config, track, 512),
-						width: 512,
-						height: 512
+						url: urlCover(config, track, 500),
+						width: 500,
+						height: 500
 					},
 					{
 						url: urlCover(config, track, 256),

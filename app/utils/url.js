@@ -5,7 +5,7 @@ const getUrl = (config, path, query = '') => {
 
 const realCover = (config, id, size = null) => {
 	if (!id) return null
-	if (!size) {
+	if (!size || size === 'original') {
 		return getUrl(config, 'getCoverArt', { id })
 	}
 	return getUrl(config, 'getCoverArt', { id, size })
@@ -21,16 +21,7 @@ export const urlCover = (config, id, size = null) => {
 		if (item.homePageUrl && item.homePageUrl.startsWith('http')) {
 			return item.homePageUrl + '/favicon.ico'
 		}
-		if (['artist', 'album', 'playlist'].includes(item.mediaType)) {
-			if (['navidrome', 'ampache'].includes(config?.type) || !config?.type) return realCover(config, item.id || item.coverArt, size)
-			else return realCover(config, item.coverArt || item.id, size)
-		} else if (item.mediaType === 'song') {
-			if (['navidrome', 'ampache'].includes(config?.type) || !config?.type) return realCover(config, item.albumId || item.coverArt, size)
-			else return realCover(config, item.coverArt || item.albumId || item.id, size)
-		} else {
-			if (['navidrome', 'ampache'].includes(config?.type) || !config?.type) return realCover(config, item.albumId || item.id || item.coverArt, size)
-			else return realCover(config, item.coverArt || item.albumId || item.id, size)
-		}
+		return realCover(config, item.coverArt, size)
 	} else {
 		if (id.startsWith('http://') || id.startsWith('https://')) return id
 		return realCover(config, id, size)

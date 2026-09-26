@@ -12,6 +12,7 @@ import mainStyles from '~/styles/main'
 import PresHeaderIcon from '~/components/PresHeaderIcon'
 import SideBarLetter from '~/components/button/SidebarLetter'
 import size from '~/styles/size'
+import { getPlayableCachedArtists } from '~/utils/cache'
 
 const ArtistExplorer = () => {
 	const { t } = useTranslation()
@@ -21,12 +22,26 @@ const ArtistExplorer = () => {
 	const [alpha, setAlpha] = React.useState([])
 	const refScroll = React.useRef(null)
 
-	const [artists] = useCachedAndApi([], 'getArtists', null, (json, setData) => {
-		setAlpha(json?.artists?.index?.map(item => item.name[0].toUpperCase()))
-		setData(json?.artists?.index?.map(item => ([
-			item.name,
-			...item.artist,
-		])).flat() || [])
+	const [artists] = useCachedAndApi([], 'getArtists', null, (json, setData, mode) => {
+		const setArtists = async () => {
+			let filteredGroups = json?.artists?.index || []
+			if (mode === 'offline') {
+				const cachedArtists = await getPlayableCachedArtists()
+				const groups = new Map()
+				cachedArtists.forEach(artist => {
+					const letter = artist.name?.[0]?.toUpperCase() || '#'
+					if (!groups.has(letter)) groups.set(letter, [])
+					groups.get(letter).push(artist)
+				})
+				filteredGroups = [...groups]
+					.sort(([left], [right]) => left.localeCompare(right))
+					.map(([name, artist]) => ({ name, artist }))
+			}
+
+			setAlpha(filteredGroups.map(item => item.name[0].toUpperCase()))
+			setData(filteredGroups.map(item => [item.name, ...item.artist]).flat())
+		}
+		setArtists()
 	})
 
 	const [favorited] = useCachedAndApi([], 'getStarred2', null, (json, setData) => {
@@ -56,9 +71,10 @@ const ArtistExplorer = () => {
 				item={item}
 				title={item.name}
 				subTitle={`${item.albumCount} ${t('albums')}`}
-				onPress={() => navigation.navigate('Artist', { id: item.id, name: item.name })}
+				onPress={() => navigation.navigate('Artist', item)}
 				borderRadius={size.radius.circle}
 				iconError="group"
+				coverSize={256}
 				isFavorited={isFavorited(item.id)}
 			/>
 		)

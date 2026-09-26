@@ -3,7 +3,7 @@ import { View, Text, ScrollView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
-import { clearCache, clearSongCache, getStatCache } from '~/utils/cache'
+import { clearCache, clearCoverCache, clearSongCache, getStatCache } from '~/utils/cache'
 import { confirmAlert } from '~/utils/alert'
 import { useSettings, useSetSettings } from '~/contexts/settings'
 import { useTheme } from '~/contexts/theme'
@@ -35,6 +35,16 @@ const CacheSettings = () => {
 			})
 	}
 
+	const setSongCaching = enabled => {
+		global.isSongCaching = enabled
+		setSettings({ ...settings, isSongCaching: enabled })
+	}
+
+	const setCoverCaching = enabled => {
+		global.isCoverCaching = enabled
+		setSettings({ ...settings, isCoverCaching: enabled })
+	}
+
 	React.useEffect(() => {
 		getStat()
 	}, [])
@@ -62,7 +72,12 @@ const CacheSettings = () => {
 					<ButtonSwitch
 						title={t("settings.cache.Enable song caching")}
 						value={settings.isSongCaching}
-						onPress={() => setSettings({ ...settings, isSongCaching: !settings.isSongCaching })}
+						onPress={() => setSongCaching(!settings.isSongCaching)}
+					/>
+					<ButtonSwitch
+						title={t("settings.cache.Enable cover caching")}
+						value={settings.isCoverCaching}
+						onPress={() => setCoverCaching(!settings.isCoverCaching)}
 					/>
 					<ButtonSwitch
 						title={t("settings.cache.Show cached songs")}
@@ -99,6 +114,18 @@ const CacheSettings = () => {
 							t('settings.cache.Clear cache alert message'),
 							async () => {
 								await clearSongCache()
+								getStat()
+							}
+						)}
+					/>
+					<ButtonMenu
+						title={t("settings.cache.Clear cover cache")}
+						icon="trash"
+						onPress={() => confirmAlert(
+							t('settings.cache.Clear cover cache'),
+							t('settings.cache.Clear cache alert message'),
+							async () => {
+								await clearCoverCache()
 								getStat()
 							}
 						)}

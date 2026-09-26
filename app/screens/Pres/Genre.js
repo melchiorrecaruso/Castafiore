@@ -30,12 +30,24 @@ const Genre = ({ route: { params: { name, albumCount = 0, songCount = 0 } } }) =
 	const [artists, setArtists] = React.useState({})
 	const { t } = useTranslation()
 
-	const [albums] = useCachedAndApi([], 'getAlbumList2', { type: 'byGenre', genre: name, size: 20 }, (json, setData) => {
+	const [albums] = useCachedAndApi([], 'getAlbumList2', { type: 'byGenre', genre: name, size: 20 }, async (json, setData, mode) => {
+		if (mode === 'offline') {
+			const offlineAlbums = json?.albumList2?.album || []
+			setData(offlineAlbums)
+			extractArtists(offlineAlbums)
+			return
+		}
 		setData(json?.albumList2?.album)
 		extractArtists(json?.albumList2?.album || [])
 	})
 
-	const [songs] = useCachedAndApi([], 'getSongsByGenre', { genre: name, count: 50 }, (json, setData) => {
+	const [songs] = useCachedAndApi([], 'getSongsByGenre', { genre: name, count: 50 }, async (json, setData, mode) => {
+		if (mode === 'offline') {
+			const offlineSongs = json?.songsByGenre?.song || []
+			setData(offlineSongs)
+			extractArtists(offlineSongs)
+			return
+		}
 		setData(json?.songsByGenre?.song)
 		extractArtists(json?.songsByGenre?.song || [])
 	})

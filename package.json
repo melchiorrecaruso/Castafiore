@@ -1,17 +1,19 @@
 {
   "name": "castafiore",
-  "version": "2026.03.14",
+  "version": "2026.09.13",
   "main": "index.js",
   "homepage": ".",
   "scripts": {
     "export:android": "eas build --platform android --profile production --local",
     "export:google": "eas build --platform android --profile google --local",
     "export:dev": "cross-env IS_DEV=true eas build --platform android --profile development --local",
+    "apk:test": "cd android && gradlew.bat assemblePreview",
     "android": "expo start --android --dev-client",
     "web": "cross-env PLATFORM=web IS_DEV=true expo start --web",
     "export:web": "cross-env PLATFORM=web expo export -p web && workbox generateSW workbox-config.js",
     "eslint": "eslint app index.js App.js -c eslint.config.mjs",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "@legendapp/list": "^1.1.4",
@@ -23,6 +25,7 @@
     "expo-build-properties": "~0.14.8",
     "expo-dev-client": "~5.2.4",
     "expo-file-system": "~18.1.11",
+    "expo-sqlite": "~15.2.14",
     "fast-xml-parser": "^5.3.3",
     "i18next": "^25.3.1",
     "md5": "^2.3.0",

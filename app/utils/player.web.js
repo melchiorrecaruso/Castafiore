@@ -11,6 +11,7 @@ import logger from '~/utils/logger'
 const audio = () => {
 	return document.getElementById('audio')
 }
+const previousRestartThreshold = 1
 
 export const initService = async () => {
 	serviceWorkerRegistration.register()
@@ -158,16 +159,17 @@ export const updateTime = () => {
 	return time
 }
 
-export const downloadSong = async (url, _id) => {
+export const downloadSong = async (url, _song, _cacheKind = 'manual', _album = null) => {
+	if (global.isSongCaching === false) return null
 	return fetch(url)
 }
 
 const downloadNextSong = async (config, queue, currentIndex) => {
 	if (!global.isSongCaching) return
-	const maxIndex = Math.min(global.cacheNextSong, queue.length)
+	const songsToCache = Math.min(global.cacheNextSong + 1, queue.length)
 
-	for (let i = -1; i < maxIndex; i++) {
-		const index = (currentIndex + queue.length + i) % queue.length
+	for (let offset = 0; offset < songsToCache; offset++) {
+		const index = (currentIndex + offset) % queue.length
 		if (!queue[index].isDownloaded && queue[index].id.match(/^[a-zA-Z0-9-]*$/)) {
 			await fetch(urlStream(config, queue[index].id, global.streamFormat, global.maxBitRate))
 				.then(() => { queue[index].isDownloaded = true })
@@ -195,7 +197,7 @@ const loadSong = async (config, queue, index) => {
 		title: song.title,
 		artist: song.artist,
 		album: song.album,
-		artwork: [{ src: urlCover(config, song) }],
+		artwork: [{ src: urlCover(config, song, 500) }],
 	})
 }
 
@@ -227,6 +229,11 @@ export const nextSong = async (config, song, songDispatch) => {
 
 export const previousSong = async (config, song, songDispatch) => {
 	if (song.queue) {
+		if (audio().currentTime >= previousRestartThreshold) {
+			await setPosition(0)
+			return
+		}
+
 		if (song.actionEndOfSong === 'random') await setIndex(config, songDispatch, song.queue, prevRandomIndex())
 		else {
 			if (!global.repeatQueue && song.index === 0) return

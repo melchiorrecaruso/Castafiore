@@ -37,16 +37,16 @@ const Artist = ({ navigation, route: { params } }) => {
 	}, [params.id])
 
 	const [artist] = useCachedAndApi([], 'getArtist', `id=${params.id}`, (json, setData) => {
-		setData(json.artist)
-		setSortAlbum(json.artist?.album?.sort((a, b) => (b.year || 0) - (a.year || 0)))
+		setData(json?.artist || {})
+		setSortAlbum(json?.artist?.album?.sort((a, b) => (b.year || 0) - (a.year || 0)) || [])
 	}, [params.id])
 
 	const [topSongs] = useCachedAndApi([], 'getTopSongs', { artist: params.name, count: 50 }, (json, setData) => {
-		setData(json.topSongs?.song || [])
+		setData(json?.topSongs?.song || [])
 	}, [params.name])
 
 	const [favorited] = useCachedAndApi([], 'getStarred2', null, (json, setData) => {
-		setData(json.starred2.song.filter(song => song.artistId === params.id))
+		setData(json?.starred2?.song?.filter(song => song.artistId === params.id) || [])
 	}, [params.id])
 
 	const getRandomSongs = async () => {
@@ -79,7 +79,7 @@ const Artist = ({ navigation, route: { params } }) => {
 				<PresHeader
 					title={artist.name || params.name}
 					subTitle={t('Artist')}
-					imgSrc={urlCover(config, params)}
+					imgSrc={urlCover(config, artist?.coverArt ? artist : params, 1000)}
 					onPressOption={() => {
 						setIsOption(true)
 					}}

@@ -13,3 +13,15 @@ index ac33473..49ce42f 100644
      // used when building against local maven
  //    implementation "com.github.doublesymmetry:kotlin-audio:2.1.0"
  
+diff --git a/node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/service/MusicService.kt b/node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/service/MusicService.kt
+index 54e5c6e..010d9b2 100644
+--- a/node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/service/MusicService.kt
++++ b/node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/service/MusicService.kt
+@@ -775,5 +775,7 @@ class MusicService : HeadlessJsTaskService() {
+         when (appKilledPlaybackBehavior) {
+             AppKilledPlaybackBehavior.PAUSE_PLAYBACK -> player.pause()
+             AppKilledPlaybackBehavior.STOP_PLAYBACK_AND_REMOVE_NOTIFICATION -> {
++                if (player.playWhenReady && player.items.isNotEmpty()) return
++
+                 player.clear()
+                 player.stop()

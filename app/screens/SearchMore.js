@@ -15,6 +15,8 @@ import size from '~/styles/size'
 import ExplorerItem from '~/components/item/ExplorerItem'
 import logger from '~/utils/logger'
 import Header from '~/components/Header'
+import { searchPlayableCachedMedia } from '~/utils/cache'
+import { useRefreshOnOffline } from '~/contexts/network'
 
 const PAGE_SIZE = 20
 
@@ -48,11 +50,19 @@ const SearchMore = ({ route: { params: { query, results, type } } }) => {
 					setItems(prev => [...prev, ...(json?.searchResult3?.song || [])])
 				}
 			})
-			.catch(error => {
+			.catch(async error => {
 				logger.error('SearchMore', 'Error fetching items:', error)
+				const cached = await searchPlayableCachedMedia(query)
+				setItems(cached[type] || [])
 				setIsLoading(false)
 			})
 	}, [offset])
+
+	useRefreshOnOffline(async () => {
+		const cached = await searchPlayableCachedMedia(query)
+		setItems(cached[type] || [])
+		setIsLoading(false)
+	})
 
 	const handleEndReached = () => {
 		if (items.length > 0 && items.length % PAGE_SIZE === 0) {
@@ -74,6 +84,7 @@ const SearchMore = ({ route: { params: { query, results, type } } }) => {
 			onPress={() => goTo(item, index)}
 			isFavorited={item.starred}
 			borderRadius={type === 'artist' ? size.radius.circle : undefined}
+			coverSize={type === 'artist' ? 256 : 100}
 		/>
 	), [items, config])
 

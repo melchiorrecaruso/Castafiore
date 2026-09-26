@@ -49,7 +49,7 @@ const stopSong = async () => {
 	await UPNP.stop(device)
 }
 
-const downloadSong = async (_urlStream, _id) => { }
+const downloadSong = async (_urlStream, _song, _cacheKind, _album) => { }
 
 const downloadNextSong = async (_queue, _currentIndex) => { }
 
@@ -64,7 +64,7 @@ const loadSong = async (config, queue, index) => {
 			title: track.title,
 			artist: track.artist,
 			album: track.album,
-			coverUrl: track.coverArt ? urlCover(config, track) : '',
+			coverUrl: track.coverArt ? urlCover(config, track, 'original') : '',
 		}
 	)
 	await UPNP.resume(device)

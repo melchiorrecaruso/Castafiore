@@ -12,6 +12,8 @@ import mainStyles from '~/styles/main'
 import PresHeaderIcon from '~/components/PresHeaderIcon'
 import size from '~/styles/size'
 import logger from '~/utils/logger'
+import { getPlayableCachedSongs } from '~/utils/cache'
+import { useRefreshOnOffline } from '~/contexts/network'
 
 const PAGE_SIZE = 100
 
@@ -26,6 +28,7 @@ const SongExplorer = () => {
 
 	React.useEffect(() => {
 		setIsLoading(true)
+		let responseMode = 'api'
 		getApiNetworkFirst(config, 'search3', {
 			query: '',
 			size: PAGE_SIZE,
@@ -35,18 +38,27 @@ const SongExplorer = () => {
 			albumCount: 0,
 			artistOffset: 0,
 			artistCount: 0,
-		})
-			.then(json => {
+		}, mode => { responseMode = mode })
+			.then(async json => {
 				setIsLoading(false)
-				const newSongs = json?.searchResult3?.song || []
+				const newSongs = responseMode === 'offline'
+					? (offset === 0 ? await getPlayableCachedSongs() : [])
+					: json?.searchResult3?.song || []
 				if (newSongs.length === 0) return
-				setSongs(prev => [...prev, ...newSongs])
+				setSongs(prev => offset === 0 ? newSongs : [...prev, ...newSongs])
 			})
-			.catch(error => {
+			.catch(async error => {
 				logger.error('SongExplorer', 'Error fetching songs:', error)
 				setIsLoading(false)
+				if (offset === 0) setSongs(await getPlayableCachedSongs())
 			})
 	}, [offset])
+
+	useRefreshOnOffline(async () => {
+		setSongs(await getPlayableCachedSongs())
+		setOffset(0)
+		setIsLoading(false)
+	})
 
 	const handleEndReached = () => {
 		if (songs.length > 0 && songs.length % PAGE_SIZE === 0) {

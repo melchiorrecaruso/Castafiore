@@ -4,18 +4,22 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
 import { useConfig } from '~/contexts/config'
+import { useRefreshOnOffline, useRefreshOnReconnect } from '~/contexts/network'
 import { getCachedAndApi } from '~/utils/api'
+import { homeSections } from '~/contexts/settings'
 import { useTheme } from '~/contexts/theme'
 import Header from '~/components/Header'
 import mainStyles from '~/styles/main'
 import AllItem from '~/components/item/AllItem'
 
-const ShowAll = ({ navigation, route: { params: { section } } }) => {
+const ShowAll = ({ navigation, route }) => {
 	const { t } = useTranslation()
 	const insets = useSafeAreaInsets()
 	const config = useConfig()
 	const theme = useTheme()
 	const [list, setList] = React.useState([])
+	const sectionId = route.params?.sectionId || route.params?.section?.id
+	const section = React.useMemo(() => homeSections.find(item => item.id === sectionId), [sectionId])
 
 	React.useEffect(() => {
 		getList()
@@ -27,6 +31,9 @@ const ShowAll = ({ navigation, route: { params: { section } } }) => {
 		if (section.type == 'album') nquery += '&size=' + 100
 		getCachedAndApi(config, section.path, nquery, (json) => section.getInfo(json, setList))
 	}
+
+	useRefreshOnReconnect(getList)
+	useRefreshOnOffline(() => setList([]))
 
 	const onPress = (item) => {
 		if (section.type === 'album') return navigation.navigate('Album', item)

@@ -6,8 +6,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import { useConfig, useSetConfig } from '~/contexts/config'
+import { useNetwork } from '~/contexts/network'
 import { confirmAlert } from '~/utils/alert'
-import { getApi } from '~/utils/api'
+import { NETWORK_ONLINE } from '~/utils/networkState'
 import { useSettings, useSetSettings, demoServers } from '~/contexts/settings'
 import { useSongDispatch } from '~/contexts/song'
 import { useTheme } from '~/contexts/theme'
@@ -29,25 +30,14 @@ const Connect = ({ navigation }) => {
 	const setSettings = useSetSettings()
 	const theme = useTheme()
 	const songDispatch = useSongDispatch()
-	const [error, setError] = React.useState('')
 	const [serverOption, setServerOption] = React.useState(null)
-	const [info, setInfo] = React.useState(null)
+	const network = useNetwork()
 
 	const upConfig = (conf) => {
 		AsyncStorage.setItem('config', JSON.stringify(conf))
 		setConfig(conf)
 		Player.resetAudio(songDispatch)
 	}
-
-	React.useEffect(() => {
-		if (!config?.url) return
-		setError('')
-		getApi({ url: config.url, query: config.query }, 'ping.view')
-			.then((json) => {
-				if (json?.status == 'ok') setInfo(json)
-			})
-			.catch(() => { })
-	}, [config])
 
 	return (
 		<ScrollView
@@ -70,11 +60,10 @@ const Connect = ({ navigation }) => {
 							<Icon name="server" size={size.icon.large} color={theme.innerTouch} />
 						</View>
 						<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
-							{!error.length && <Icon name="circle" size={10} color={info ? 'green' : 'red'} />}
-							<Text style={{ color: error.length ? '#ff0000' : theme.primaryText, fontSize: size.text.medium, marginStart: 5 }}>
+							<Icon name="circle" size={10} color={network.status === NETWORK_ONLINE ? 'green' : 'red'} />
+							<Text style={{ color: theme.primaryText, fontSize: size.text.medium, marginStart: 5 }}>
 								{(() => {
-									if (error.length) return error
-									else if (info) return `${info.type.charAt(0).toUpperCase()}${info.type.slice(1)} ${info.serverVersion}`
+									if (network.status === NETWORK_ONLINE && network.serverInfo) return `${network.serverInfo.type.charAt(0).toUpperCase()}${network.serverInfo.type.slice(1)} ${network.serverInfo.serverVersion}`
 									else return t('Not connected')
 								})()}
 							</Text>
@@ -142,8 +131,6 @@ const Connect = ({ navigation }) => {
 				text={t("Disconnect")}
 				onPress={() => {
 					upConfig({ url: null, username: null, query: null })
-					setInfo(null)
-					setError('')
 				}} />
 			<OptionsPopup
 				options={[

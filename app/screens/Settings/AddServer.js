@@ -18,6 +18,7 @@ import logger from '~/utils/logger'
 import mainStyles from '~/styles/main'
 import OptionInput from '~/components/settings/OptionInput'
 import Player from '~/utils/player'
+import { getNavidromeLastFmConfig } from '~/utils/lastFm'
 import settingStyles from '~/styles/settings'
 import size from '~/styles/size'
 
@@ -61,13 +62,33 @@ const AddServer = ({ navigation }) => {
 			return
 		}
 		getApi({ url: uri, query }, 'ping.view')
-			.then((json) => {
+			.then(async (json) => {
 				if (json?.status == 'ok') {
 					setInfo(json)
-					const conf = { name, url: uri, username, query, type: json.type }
+					let lastFm = {}
+					if (json.type === 'navidrome') {
+						lastFm = await getNavidromeLastFmConfig(uri, username, password)
+							.catch(error => {
+								logger.info('AddServer', `Unable to read Navidrome Last.fm configuration: ${error}`)
+								return {}
+							})
+					}
+					const conf = {
+						name,
+						url: uri,
+						username,
+						query,
+						type: json.type,
+						...lastFm,
+						lastFmUser: username,
+						lastFmStatsEnabled: Boolean(lastFm.lastFmApiKey),
+					}
 					upConfig(conf)
 					setError('')
-					setSettings({ ...settings, servers: [...settings.servers, conf] })
+					setSettings({
+						...settings,
+						servers: [...settings.servers, conf],
+					})
 					navigation.goBack()
 					navigation.navigate('HomeStack')
 				} else {

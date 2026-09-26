@@ -1,6 +1,5 @@
 import React from 'react'
 import { Text, View, ScrollView, StyleSheet, Pressable } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
@@ -12,13 +11,12 @@ import { useSongDispatch } from '~/contexts/song'
 import { useTheme } from '~/contexts/theme'
 import RotateIconButton from '~/components/button/RotateIconButton'
 import HorizontalList from '~/components/lists/HorizontalList'
-import IconButton from '~/components/button/IconButton'
 import mainStyles from '~/styles/main'
 import size from '~/styles/size'
+import { initializeNetworkState } from '~/utils/networkState'
 
 const Home = () => {
 	const { t } = useTranslation()
-	const navigation = useNavigation()
 	const insets = useSafeAreaInsets()
 	const songDispatch = useSongDispatch()
 	const config = useConfig()
@@ -35,9 +33,14 @@ const Home = () => {
 			.catch(() => { })
 	}
 
-	const forceRefresh = (rotate = () => { }) => {
-		setRefresh(refresh + 1)
-		rotate()
+	const refreshLists = () => {
+		setRefresh(value => value + 1)
+	}
+
+	const forceRefresh = async (rotate = () => { }) => {
+		if (typeof rotate === 'function') rotate()
+		await initializeNetworkState(config)
+		refreshLists()
 	}
 
 	const getStatusRefresh = () => {
@@ -49,15 +52,16 @@ const Home = () => {
 					}, 1000)
 					setStatusRefresh(json.scanStatus)
 				} else {
-					forceRefresh()
+					refreshLists()
 					setStatusRefresh()
 				}
 			})
 			.catch(() => { })
 	}
 
-	const refreshServer = () => {
-		forceRefresh()
+	const refreshServer = async () => {
+		await initializeNetworkState(config)
+		refreshLists()
 		getApi(config, 'startScan', 'fullScan=true')
 			.then(() => {
 				getStatusRefresh()
@@ -77,16 +81,6 @@ const Home = () => {
 					<Text style={styles.textRandom(theme)}>{t('Random Song')}</Text>
 				</Pressable>
 				<View style={{ flexDirection: 'row' }}>
-					{
-						settings.listenBrainzUser ?
-							<IconButton
-								icon="bell-o"
-								size={size.icon.tiny}
-								color={theme.primaryText}
-								style={{ paddingHorizontal: 10, paddingVertical: 5 }}
-								onPress={() => navigation.navigate('FreshReleases')}
-							/> : null
-					}
 					{statusRefresh ?
 						<Pressable onPress={forceRefresh} style={mainStyles.opacity}
 						>
@@ -106,8 +100,8 @@ const Home = () => {
 					}
 				</View>
 			</View>
-			{config?.url && settings?.homeOrderV2?.map((value, index) =>
-				<HorizontalList key={index} refresh={refresh}{...value} />
+			{config?.url && settings?.homeOrderV2?.map(value =>
+				<HorizontalList key={value.id} refresh={refresh} {...value} />
 			)}
 		</ScrollView>
 	)

@@ -5,6 +5,7 @@ import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-c
 import '~/i18next/i18next'
 import { version } from '~/../package.json'
 import AppProvider from '~/contexts'
+import { initializeDatabase } from '~/utils/database'
 import logger from '~/utils/logger'
 import Navigation from '~/components/Navigation'
 
@@ -15,6 +16,8 @@ global.streamFormat = 'mp3'
 const App = () => {
 	React.useEffect(() => {
 		logger.info('App', `App started (version: ${version}, platform: ${Platform.OS} ${Platform.Version})`)
+		initializeDatabase()
+			.catch((error) => logger.error('Database', 'Unable to initialize SQLite:', error))
 	}, [])
 
 	return (

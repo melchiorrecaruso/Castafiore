@@ -89,7 +89,6 @@ export const defaultSettings = {
 		{ id: 'random-album', enable: false },
 		{ id: 'highest-album', enable: false },
 	],
-	listenBrainzUser: '',
 	sizeOfList: 15,
 	scrollHelper: false,
 	// Theme settings
@@ -97,6 +96,7 @@ export const defaultSettings = {
 	themePlayer: 'default',
 	// Cache settings
 	isSongCaching: false,
+	isCoverCaching: true,
 	cacheNextSong: 5,
 	showCache: true,
 	// Player settings
@@ -117,7 +117,7 @@ export const homeSections = [
 		icon: 'bar-chart',
 		id: 'week-activity',
 		title: 'Week Activity',
-		type: 'listenbrainz',
+		type: 'listening_activity',
 		isShowAll: false,
 		path: '',
 		query: '',
@@ -240,6 +240,8 @@ const getSettings = async () => {
 	if (rawSettings === null) return defaultSettings
 	try {
 		const data = JSON.parse(rawSettings)
+		delete data.listenBrainzUser
+		delete data.lastFmUser
 		if (data.homeOrderV2 && data?.homeOrderV2?.length !== defaultSettings.homeOrderV2.length) {
 			defaultSettings.homeOrderV2.forEach((section) => {
 				if (!data.homeOrderV2.some((s) => s.id === section.id)) {
@@ -273,6 +275,10 @@ const updateGlobalSettings = async (settings) => {
 	React.useEffect(() => {
 		global.isSongCaching = settings.isSongCaching
 	}, [settings.isSongCaching])
+
+	React.useEffect(() => {
+		global.isCoverCaching = settings.isCoverCaching
+	}, [settings.isCoverCaching])
 
 	React.useEffect(() => {
 		global.saveQueue = settings.saveQueue

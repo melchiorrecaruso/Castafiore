@@ -4,19 +4,24 @@ import { useTranslation } from 'react-i18next'
 import { LegendList } from '@legendapp/list'
 
 import { useConfig } from '~/contexts/config'
-import { getCachedAndApi } from '~/utils/api'
+import { useRefreshOnOffline, useRefreshOnReconnect } from '~/contexts/network'
+import { getCachedAndApi, getOfflineCachedResponse } from '~/utils/api'
+import { homeSections } from '~/contexts/settings'
 import { useTheme } from '~/contexts/theme'
 import size from '~/styles/size'
 import Header from '~/components/Header'
 import mainStyles from '~/styles/main'
 import ExplorerItem from '~/components/item/ExplorerItem'
+import { getCachedNavidromeList } from '~/utils/navidromeLists'
 
-const ShowAll = ({ navigation, route: { params: { section } } }) => {
+const ShowAll = ({ navigation, route }) => {
 	const { t } = useTranslation()
 	const insets = useSafeAreaInsets()
 	const config = useConfig()
 	const theme = useTheme()
 	const [list, setList] = React.useState([])
+	const sectionId = route.params?.sectionId || route.params?.section?.id
+	const section = React.useMemo(() => homeSections.find(item => item.id === sectionId), [sectionId])
 
 	React.useEffect(() => {
 		getList()
@@ -26,8 +31,26 @@ const ShowAll = ({ navigation, route: { params: { section } } }) => {
 		let nquery = section.query || ''
 
 		if (section.type == 'album') nquery += '&size=' + 100
-		getCachedAndApi(config, section.path, nquery, (json) => section.getInfo(json, setList))
+		getCachedAndApi(config, section.path, nquery, (json, mode) => {
+			section.getInfo(json, async items => {
+				if (mode === 'offline') {
+					const databaseItems = await getCachedNavidromeList(config, section.id)
+					setList(databaseItems || [])
+				} else setList(items)
+			})
+		})
 	}
+
+	useRefreshOnReconnect(getList)
+	useRefreshOnOffline(async () => {
+		let nquery = section.query || ''
+		if (section.type === 'album') nquery += '&size=' + 100
+		const json = await getOfflineCachedResponse(config, section.path, nquery)
+		section.getInfo(json, async () => {
+			const databaseItems = await getCachedNavidromeList(config, section.id)
+			setList(databaseItems || [])
+		})
+	})
 
 	const onPress = React.useCallback((item) => {
 		if (section.type === 'album') return navigation.navigate('Album', item)

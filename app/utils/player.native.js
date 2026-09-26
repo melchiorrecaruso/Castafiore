@@ -6,6 +6,7 @@ import UpnpPlayer from '~/utils/player/playerUpnp'
 import logger from '~/utils/logger'
 
 let type = 'local'
+const previousRestartThreshold = 1
 
 const getPlayer = (forceType = null) => {
 	const deviceType = forceType || type
@@ -31,6 +32,12 @@ export const useEvent = (song, songDispatch) => {
 
 export const previousSong = async (config, song, songDispatch) => {
 	if (song.queue) {
+		const state = await saveState()
+		if (state.position >= previousRestartThreshold) {
+			await setPosition(0)
+			return
+		}
+
 		if (song.actionEndOfSong === 'random') await setIndex(config, songDispatch, song.queue, prevRandomIndex())
 		else {
 			if (!global.repeatQueue && song.index === 0) return
@@ -67,8 +74,8 @@ export const stopSong = async () => {
 	return getPlayer().stopSong()
 }
 
-export const downloadSong = async (urlStream, id) => {
-	return getPlayer().downloadSong(urlStream, id)
+export const downloadSong = async (urlStream, song, cacheKind = 'manual', album = null) => {
+	return getPlayer().downloadSong(urlStream, song, cacheKind, album)
 }
 
 export const downloadNextSong = async (queue, currentIndex) => {

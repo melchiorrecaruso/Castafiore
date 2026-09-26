@@ -7,7 +7,8 @@ import { useConfig } from '~/contexts/config'
 import { getApi } from '~/utils/api'
 import { parseLrc } from '~/utils/lrc'
 import Player from '~/utils/player'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getCachedLyrics, saveLyrics } from '~/utils/lyricsCache'
+import logger from '~/utils/logger'
 
 const Lyric = ({ song, style, color = null, sizeText = 23 }) => {
 	const { t } = useTranslation()
@@ -25,12 +26,11 @@ const Lyric = ({ song, style, color = null, sizeText = 23 }) => {
 	}, [song.songInfo])
 
 	const getLyrics = () => {
-		AsyncStorage.getItem(`lyrics/${song.songInfo.id}`)
-			.then(res => {
-				if (res) {
-					const ly = JSON.parse(res)
+		getCachedLyrics(config, song.songInfo.id)
+			.then(cached => {
+				if (cached) {
 					setIsLayout(true)
-					setLyrics(ly)
+					setLyrics(cached.lines)
 				} else {
 					getNavidromeLyrics()
 				}
@@ -56,13 +56,27 @@ const Lyric = ({ song, style, color = null, sizeText = 23 }) => {
 	const getNavidromeLyrics = () => {
 		getApi(config, 'getLyricsBySongId', { id: song.songInfo.id })
 			.then(res => {
-				const ly = res.lyricsList?.structuredLyrics[0]?.line?.map(ly => ({ time: ly.start / 1000, text: ly.value.length ? ly.value : '...' }))
-				if (ly.length == 0) { // If not found
+				const available = res.lyricsList?.structuredLyrics || []
+				const selected = available.find(item => item.synced && item.line?.length) || available.find(item => item.line?.length)
+				if (!selected) {
 					return getLrcLibLyrics()
 				}
+				const offset = selected.offset || 0
+				const ly = selected.line.map(line => ({
+					time: ((line.start || 0) + offset) / 1000,
+					text: line.value?.length ? line.value : '...',
+				}))
 				ly.sort((a, b) => a.time - b.time)
 				setLyrics(ly)
-				AsyncStorage.setItem(`lyrics/${song.songInfo.id}`, JSON.stringify(ly))
+				saveLyrics(config, song.songInfo.id, {
+					source: 'navidrome',
+					language: selected.lang,
+					synced: Boolean(selected.synced),
+					offset,
+					displayArtist: selected.displayArtist,
+					displayTitle: selected.displayTitle,
+					lines: ly,
+				}).catch(error => logger.error('Lyric', `Unable to save Navidrome lyrics: ${error}`))
 			})
 			.catch(() => { // If not found
 				getLrcLibLyrics()
@@ -83,7 +97,15 @@ const Lyric = ({ song, style, color = null, sizeText = 23 }) => {
 			.then(res => {
 				const ly = parseLrc(res.syncedLyrics)
 				setLyrics(ly)
-				AsyncStorage.setItem(`lyrics/${song.songInfo.id}`, JSON.stringify(ly))
+				saveLyrics(config, song.songInfo.id, {
+					source: 'lrclib',
+					language: res.lang,
+					synced: true,
+					offset: 0,
+					displayArtist: res.artistName,
+					displayTitle: res.trackName,
+					lines: ly,
+				}).catch(error => logger.error('Lyric', `Unable to save LRCLIB lyrics: ${error}`))
 			})
 			.catch(() => {
 				setLyrics([{ time: 0, text: t('No lyrics found') }])
